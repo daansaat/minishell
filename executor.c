@@ -11,13 +11,18 @@ typedef struct	s_file
 	int	out;
 }				t_file;
 
-typedef struct	s_list
+typedef struct	s_scmd
+{
+	char	*args[3];
+}				t_scmd;
+
+typedef struct	s_cmd
 {
 	int		num_simple_cmds;
 	char	*infile;
 	char	*outfile;
-	char	*cmd_args[3];
-}				t_list;
+	t_scmd	*scmd[1];
+}				t_cmd;
 
 void	set_pipe(t_file *fd)
 {
@@ -45,7 +50,7 @@ void	do_execute(t_list *cmd)
 	}
 	if (pid == 0)
 	{
-		execvp(cmd->cmd_args[0], cmd->cmd_args);
+		execvp(cmd->scmd[i].args[0], cmd->scmd[i].args);
 		perror("execvp()");
 		exit(1);
 	}
@@ -108,9 +113,9 @@ int	main(void)
 	t_list	cmd;
 
 	cmd.num_simple_cmds = 1;
-	cmd.cmd_args[0] = "ls";
-	cmd.cmd_args[1] = "-al";
-	cmd.cmd_args[2] = NULL;
+	cmd.scmd[0].args[0] = "ls";
+	cmd.scmd[0].args[1] = "-al";
+	cmd.scmd[0].args[2] = NULL;
 	execute(&cmd);
 	return (0);
 }
