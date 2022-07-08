@@ -1,10 +1,26 @@
 #ifndef EXEC_H
 # define EXEC_H
 
+typedef enum e_tokentype
+{
+	TOKEN_null,
+    TOKEN_PIPE,
+    TOKEN_GREATER,
+    TOKEN_LESS,
+    TOKEN_DOUBLEGREATER,
+    TOKEN_DOUBLELESS,
+    TOKEN_STRING,
+    // TOKEN_doubleQuotedString,
+    // TOKEN_singleQuotedString,
+    // TOKEN_unquotedString,
+    TOKEN_FILEPATH
+}	t_tokentype;
+
 typedef struct	s_filed
 {
 	int		tmpin;
 	int		tmpout;
+    int     redirect_out;
 	int		in;
 	int		out;
 }				t_filed;
@@ -18,8 +34,12 @@ typedef struct s_args
 typedef struct s_ast
 {
 	t_args	*args;
-	char	*infile;
-	char	*outfile;
+    // t_args  *infile;
+    // t_args  *outfile;
+	char	**infile;
+    // char    *infile_type
+	char	**outfile;
+    char    *outfile_type;
 	// t_parse			type;
 }	t_ast;
 
