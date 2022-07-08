@@ -1,19 +1,18 @@
 NAME = exec
-SRC_DIR = src/
 SRC = \
 	main.c \
 	exec.c
 OBJ_DIR = obj/
 OBJ = $(SRC:%.c=$(OBJ_DIR)%.o)
 FLAGS = -Wall -Werror -Wextra
-INC = -I ./inc
+INC = -I ./
 
 all: $(NAME)
 
 $(NAME): $(OBJ)
 	$(CC) $(FLAGS) $^ -o $@
 
-$(OBJ_DIR)%.o: $(SRC_DIR)%.c
+$(OBJ_DIR)%.o: %.c
 	@mkdir -p $(OBJ_DIR)
 	$(CC) $(FLAGS) $(INC) -c $< -o $@
 
