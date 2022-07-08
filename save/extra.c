@@ -126,6 +126,7 @@ int	main(void)
 
 	cmd.num_simple_cmds = 2;
 	cmd.scmd = malloc(sizeof(t_scmd) * 2);
+    char	*args[3];
 	cmd.scmd[0].args[0] = "ls";
 	cmd.scmd[0].args[1] = "-la";
 	cmd.scmd[0].args[2] = NULL;
