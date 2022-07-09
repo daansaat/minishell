@@ -5,6 +5,22 @@
 #include <stdio.h>
 #include <string.h>
 
+void    close_fd(t_filed *fd)
+{
+    if (dup2(fd->tmpin, STDIN_FILENO) == -1) {
+        perror("dup2(3)");
+        exit(EXIT_FAILURE);
+    }
+	if (dup2(fd->tmpout, STDOUT_FILENO) == -1) {
+        perror("dup2(4)");
+        exit(EXIT_FAILURE);
+    }
+	close(fd->tmpin);
+	close(fd->tmpout);
+	close(fd->in);
+    free(fd);
+}
+
 pid_t	do_execute(t_ast *ast, t_filed *fd, int i)
 {
 	pid_t	cpid;
@@ -35,7 +51,25 @@ void	create_pipe(t_filed *fd)
 	fd->out = fdpipe[1]; // fdpipe[1] - write -output
 }
 
-void    save_redirections(t_filed *fd)
+void	set_fd(t_filed *fd, int num_cmd, int total_num_cmd)
+{
+    if (dup2(fd->in, STDIN_FILENO) == -1) {
+		perror("dup2(1)");
+		exit(EXIT_FAILURE);
+	}
+	close(fd->in);
+	if (num_cmd == total_num_cmd - 1)
+        fd->out = fd->redirect_out;
+	else
+		create_pipe(fd);
+	if (dup2(fd->out, STDOUT_FILENO) == -1) {
+		perror("dup2(2)");
+		exit(EXIT_FAILURE);
+	}
+	close(fd->out);
+}
+
+void    set_redirections(t_filed *fd)
 {
     if (fd->in == 0) {
         fd->in = dup(fd->tmpin);
@@ -75,25 +109,7 @@ void    check_redirections(t_ast *ast, t_filed *fd)
             }
         i++;
     }
-    save_redirections(fd);
-}
-
-void	set_fd(t_filed *fd, int num_cmd, int total_num_cmd)
-{
-    if (dup2(fd->in, STDIN_FILENO) == -1) {
-		perror("dup2(5)");
-		exit(EXIT_FAILURE);
-	}
-	close(fd->in);
-	if (num_cmd == total_num_cmd - 1)
-        fd->out = fd->redirect_out;
-	else
-		create_pipe(fd);
-	if (dup2(fd->out, STDOUT_FILENO) == -1) {
-		perror("dup2(6)");
-		exit(EXIT_FAILURE);
-	}
-	close(fd->out);
+    set_redirections(fd);
 }
 
 t_filed    *init_fd(void)
@@ -141,10 +157,5 @@ void	executor(t_ast *ast)
 		i++;
 	}
 	waitpid(cpid, NULL, 0);
-	dup2(fd->tmpin, STDIN_FILENO);
-	dup2(fd->tmpout, STDOUT_FILENO);
-	close(fd->tmpin);
-	close(fd->tmpout);
-	close(fd->in);
-    free(fd);
+    close_fd(fd);
 }

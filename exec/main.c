@@ -24,8 +24,8 @@ int	main(void)
     ast->args[3]->data = malloc(sizeof(char*) * 50);
 
     ast->args[0]->type = TOKEN_STRING;
-    ast->args[0]->data[0] = "cat";
-    ast->args[0]->data[1] = NULL;//"marcus";
+    ast->args[0]->data[0] = "echo";
+    ast->args[0]->data[1] = "hello";
     ast->args[0]->data[2] = NULL;
 
     ast->args[1]->type = TOKEN_STRING;
@@ -43,7 +43,7 @@ int	main(void)
     ast->args[3]->data[1] = NULL;
     ast->args[3]->data[2] = NULL;
 
-    // ast->args[2] = NULL;
+    // ast->args[3] = NULL;
 	executor(ast);
     // system("leaks exec");
 	return (0);
