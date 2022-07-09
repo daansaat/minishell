@@ -159,6 +159,9 @@ void	executor(t_ast *ast)
         num_cmd++;
 		i++;
 	}
-	waitpid(cpid, NULL, 0);
+	if (waitpid(cpid, NULL, 0) == -1){
+        perror("waitpid()");
+        exit(EXIT_FAILURE);
+    }
     close_fd(fd);
 }
