@@ -28,19 +28,13 @@ typedef struct	s_filed
 typedef struct s_args
 {
 	char			**data;
-	// t_tokentype		type;
+	t_tokentype		type;
 }	t_args;
 
 typedef struct s_ast
 {
-	t_args	*args;
-    // t_args  *infile;
-    // t_args  *outfile;
-	char	**infile;
-    // char    *infile_type
-	char	**outfile;
-    char    *outfile_type;
-	// t_parse			type;
+	t_args	**args;
+    int     total_num_cmd;
 }	t_ast;
 
 void	executor(t_ast *ast);
