@@ -95,18 +95,21 @@ void    check_redirections(t_ast *ast, t_filed *fd)
 
     i = 0;
     while (ast->args[i]) {
-        if (ast->args[i]->type == TOKEN_GREATER)
-            fd->out = open(ast->args[i]->data[0], O_WRONLY | O_CREAT | O_TRUNC, 0644);
         if (ast->args[i]->type == TOKEN_LESS)
             fd->in = open(ast->args[i]->data[0], O_RDONLY);
-        if (ast->args[i]->type == TOKEN_DOUBLEGREATER)
-            fd->out = open(ast->args[i]->data[0], O_WRONLY | O_CREAT | O_APPEND, 0644);
         // if (ast->args[i]->type == TOKEN_DOUBLELESS)
             // still have to write
-        if (fd->in == -1 || fd->out == -1) {
+        if (fd->in == -1) {
             perror("open(1)");
             exit(EXIT_FAILURE);
-            }
+        if (ast->args[i]->type == TOKEN_GREATER)
+            fd->out = open(ast->args[i]->data[0], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+        if (ast->args[i]->type == TOKEN_DOUBLEGREATER)
+            fd->out = open(ast->args[i]->data[0], O_WRONLY | O_CREAT | O_APPEND, 0644);
+        if (fd->out == -1) {
+            perror("open(2)");
+            exit(EXIT_FAILURE);
+        }
         i++;
     }
     set_redirections(fd);
