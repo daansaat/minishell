@@ -17,7 +17,6 @@ void    close_fd(t_filed *fd)
     }
 	close(fd->tmpin);
 	close(fd->tmpout);
-	close(fd->in);
     free(fd);
 }
 
@@ -25,7 +24,7 @@ pid_t	do_execute(t_ast *ast, t_filed *fd, int i)
 {
 	pid_t	cpid;
 
-	cpid = fork();
+    cpid = fork();
 	if (cpid == -1) {
 		perror("fork()");
 		exit(EXIT_FAILURE);
@@ -69,24 +68,28 @@ void	set_fd(t_filed *fd, int num_cmd, int total_num_cmd)
 	close(fd->out);
 }
 
-void    set_redirections(t_filed *fd)
+void    read_till_delimiter(t_filed *fd, char *delimiter)
 {
-    if (fd->in == 0) {
-        fd->in = dup(fd->tmpin);
-        if (fd->in == -1) {
-            perror("dup(3)");
-            exit(EXIT_FAILURE);
+    char    buff[1];
+    char    line[1024];
+	int		i;
+
+    i = 0;
+	create_pipe(fd);
+    while (read(0, buff, 1))
+    {
+		line[i] = buff[0];
+        if (line[i] == '\n') {
+            line[i] = '\0';
+            if (strcmp(line, delimiter) == 0)
+                break ;
+            line[i] = '\n';
+            write(fd->out, line, i + 1);
+            i = -1;
         }
+        i++;
     }
-    if (fd->out == 0) {
-        fd->redirect_out = dup(fd->tmpout);
-        if (fd->redirect_out == -1) {
-            perror("dup(4)");
-            exit(EXIT_FAILURE);
-        }
-    }
-    else
-        fd->redirect_out = fd->out;
+	close(fd->out);
 }
 
 void    check_redirections(t_ast *ast, t_filed *fd)
@@ -97,22 +100,22 @@ void    check_redirections(t_ast *ast, t_filed *fd)
     while (ast->args[i]) {
         if (ast->args[i]->type == TOKEN_LESS)
             fd->in = open(ast->args[i]->data[0], O_RDONLY);
-        // if (ast->args[i]->type == TOKEN_DOUBLELESS)
-            // still have to write
+        if (ast->args[i]->type == TOKEN_DOUBLELESS)
+            read_till_delimiter(fd, ast->args[i]->data[0]);
         if (fd->in == -1) {
             perror("open(1)");
             exit(EXIT_FAILURE);
+        }
         if (ast->args[i]->type == TOKEN_GREATER)
-            fd->out = open(ast->args[i]->data[0], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+            fd->redirect_out = open(ast->args[i]->data[0], O_WRONLY | O_CREAT | O_TRUNC, 0644);
         if (ast->args[i]->type == TOKEN_DOUBLEGREATER)
-            fd->out = open(ast->args[i]->data[0], O_WRONLY | O_CREAT | O_APPEND, 0644);
-        if (fd->out == -1) {
+            fd->redirect_out = open(ast->args[i]->data[0], O_WRONLY | O_CREAT | O_APPEND, 0644);
+        if (fd->redirect_out == -1) {
             perror("open(2)");
             exit(EXIT_FAILURE);
         }
         i++;
     }
-    set_redirections(fd);
 }
 
 t_filed    *init_fd(void)
@@ -134,8 +137,9 @@ t_filed    *init_fd(void)
         perror("dup(2)");
         exit(EXIT_FAILURE);
     }
-    fd->in = 0;
-    fd->out = 0;
+    fd->in = dup(STDIN_FILENO);
+    fd->out = dup(STDOUT_FILENO);
+    fd->redirect_out = dup(STDOUT_FILENO);
     return (fd);
 }
 
