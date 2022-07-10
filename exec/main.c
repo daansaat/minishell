@@ -34,16 +34,16 @@ int	main(void)
     ast->args[1]->data[2] = NULL;
 
     ast->args[2]->type = TOKEN_LESS;//GREATER;
-    ast->args[2]->data[0] = "infile";
+    ast->args[2]->data[0] = "1";
     ast->args[2]->data[1] = NULL;
     ast->args[2]->data[2] = NULL;
 
-    // ast->args[3]->type = TOKEN_LESS;
-    // ast->args[3]->data[0] = "1";
-    // ast->args[3]->data[1] = NULL;
-    // ast->args[3]->data[2] = NULL;
+    ast->args[3]->type = TOKEN_LESS;
+    ast->args[3]->data[0] = "1";
+    ast->args[3]->data[1] = NULL;
+    ast->args[3]->data[2] = NULL;
 
-    ast->args[3] = NULL;
+    ast->args[2] = NULL;
 	executor(ast);
     // system("leaks exec");
 	return (0);

@@ -81,7 +81,7 @@ void    read_till_delimiter(t_filed *fd, char *delimiter)
 		line[i] = buff[0];
         if (line[i] == '\n') {
             line[i] = '\0';
-            if (strcmp(line, delimiter) == 0)
+            if (strcmp(line, delimiter) == 0) //replace /w ft_strcmp!!
                 break ;
             line[i] = '\n';
             write(fd->out, line, i + 1);
@@ -98,18 +98,26 @@ void    check_redirections(t_ast *ast, t_filed *fd)
 
     i = 0;
     while (ast->args[i]) {
-        if (ast->args[i]->type == TOKEN_LESS)
+        if (ast->args[i]->type == TOKEN_LESS) {
+            close(fd->in);
             fd->in = open(ast->args[i]->data[0], O_RDONLY);
-        if (ast->args[i]->type == TOKEN_DOUBLELESS)
+        }
+        if (ast->args[i]->type == TOKEN_DOUBLELESS) {
+            close(fd->in);
             read_till_delimiter(fd, ast->args[i]->data[0]);
+        }
         if (fd->in == -1) {
             perror("open(1)");
             exit(EXIT_FAILURE);
         }
-        if (ast->args[i]->type == TOKEN_GREATER)
+        if (ast->args[i]->type == TOKEN_GREATER) {
+            close(fd->redirect_out);
             fd->redirect_out = open(ast->args[i]->data[0], O_WRONLY | O_CREAT | O_TRUNC, 0644);
-        if (ast->args[i]->type == TOKEN_DOUBLEGREATER)
+        }
+        if (ast->args[i]->type == TOKEN_DOUBLEGREATER) {
+            close(fd->redirect_out);
             fd->redirect_out = open(ast->args[i]->data[0], O_WRONLY | O_CREAT | O_APPEND, 0644);
+        }
         if (fd->redirect_out == -1) {
             perror("open(2)");
             exit(EXIT_FAILURE);
@@ -153,7 +161,7 @@ void	executor(t_ast *ast)
     fd = init_fd();
     check_redirections(ast, fd);
 	while (ast->args[i])
-	{
+    {
         while (ast->args[i] && ast->args[i]->type != TOKEN_STRING)
             i++;
         if (!ast->args[i])
