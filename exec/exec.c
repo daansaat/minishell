@@ -70,7 +70,7 @@ void    read_till_delimiter(t_filed *fd, char *delimiter)
 void    check_redirections_in(t_ast *ast, t_filed *fd, int i)
 {
 	while (ast->args[i] && ast->args[i]->type != TOKEN_STRING) 
-    {
+	{
 		if (ast->args[i]->type == TOKEN_LESS) {
 			close(fd->in);
 			fd->in = open(ast->args[i]->data[0], O_RDONLY);
@@ -83,14 +83,14 @@ void    check_redirections_in(t_ast *ast, t_filed *fd, int i)
 			perror("open(1)");
 			exit(EXIT_FAILURE);
 		}
-        i++;
-    }
+		i++;
+	}
 }
 
 void    check_redirections_out(t_ast *ast, t_filed *fd, int i)
 {
 	while (ast->args[i] && ast->args[i]->type != TOKEN_STRING) 
-    {
+	{
 		if (ast->args[i]->type == TOKEN_GREATER) {
 			close(fd->out);
 			fd->out = open(ast->args[i]->data[0], O_WRONLY | O_CREAT | O_TRUNC, 0644);
@@ -121,7 +121,7 @@ void	create_pipe(t_filed *fd)
 
 void	set_fd(t_ast *ast, t_filed *fd, int i, int num_cmd, int total_num_cmd)
 {
-    check_redirections_in(ast, fd, i + 1);
+	check_redirections_in(ast, fd, i + 1);
 	if (dup2(fd->in, STDIN_FILENO) == -1) {
 		perror("set_fd dup2(1)");
 		exit(EXIT_FAILURE);
@@ -131,7 +131,7 @@ void	set_fd(t_ast *ast, t_filed *fd, int i, int num_cmd, int total_num_cmd)
 		fd->out = dup(fd->tmpout);
 	else
 		create_pipe(fd);
-    check_redirections_out(ast, fd, i + 1);
+	check_redirections_out(ast, fd, i + 1);
 	if (dup2(fd->out, STDOUT_FILENO) == -1) {
 		perror("set_fd dup2(2)");
 		exit(EXIT_FAILURE);
@@ -166,10 +166,10 @@ void	executor(t_ast *ast)
 	while (ast->args[i])
 	{
 		if (ast->args[i] && ast->args[i]->type == TOKEN_STRING) {
-            set_fd(ast, fd, i, num_cmd, ast->cmd_number); 
-		    cpid = do_execute(ast, fd, i);
-            num_cmd++;
-        }
+			set_fd(ast, fd, i, num_cmd, ast->cmd_number); 
+			cpid = do_execute(ast, fd, i);
+			num_cmd++;
+		}
 		i++;
 	}
 	if (waitpid(cpid, NULL, 0) == -1) {
