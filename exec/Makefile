@@ -1,7 +1,8 @@
 NAME = exec
 SRC = \
 	main.c \
-	exec.c
+	exec.c \
+	fd_utils.c
 OBJ_DIR = obj/
 OBJ = $(SRC:%.c=$(OBJ_DIR)%.o)
 FLAGS = -Wall -Werror -Wextra
