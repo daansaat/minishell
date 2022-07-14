@@ -20,7 +20,6 @@ typedef struct	s_filed
 {
 	int		tmpin;
 	int		tmpout;
-    int     redirect_out;
 	int		in;
 	int		out;
 }				t_filed;
@@ -34,7 +33,7 @@ typedef struct s_args
 typedef struct s_ast
 {
 	t_args	**args;
-    int     total_num_cmd;
+    int     cmd_number;
 }	t_ast;
 
 void	executor(t_ast *ast);
