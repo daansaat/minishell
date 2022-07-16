@@ -3,10 +3,24 @@
 #include <sys/stat.h>
 #include <time.h>
 
-// char    *get_next_path()
-// {
-    
-// }
+char    *get_next_path(char *path_env, char *cmd, int *i)
+{
+        char    *path;
+        int     j;
+
+        j = *i;
+        while (path_env[*i] && path_env[*i] != ':')
+            *i += 1;
+        path = malloc(sizeof(char) * (*i - j + ft_strlen(cmd) + 2));
+        if (!path) {
+            perror("malloc()");
+            exit(EXIT_FAILURE);
+        }
+        ft_strlcpy(path, &path_env[j], *i - j + 1);
+        ft_strlcpy(&path[*i - j], "/", 2);
+        ft_strlcpy(&path[*i - j + 1], cmd, ft_strlen(cmd) + 1);
+        return (path);
+}
 
 char    *search_path(char *cmd)
 {
@@ -14,24 +28,12 @@ char    *search_path(char *cmd)
     char        *path_env;
     char        *path;
     int         i;
-    int         j;
     
     i = 0;
     path_env = getenv("PATH");
-    path = path_env;
     while (path_env[i])
     {
-        j = i;
-        while (path_env[i] && path_env[i] != ':')
-            i++;
-        path = malloc(sizeof(char) * (i - j + ft_strlen(cmd) + 2));
-        if (!path) {
-            perror("malloc()");
-            exit(EXIT_FAILURE);
-        }
-        ft_strlcpy(path, &path_env[j], i - j + 1);
-        ft_strlcpy(&path[i - j], "/", 2);
-        ft_strlcpy(&path[i - j + 1], cmd, ft_strlen(cmd) + 1);
+        path = get_next_path(path_env, cmd, &i);
         if (stat(path, &sb) == 0) // still check if executable or not??
             return (path);
         else
