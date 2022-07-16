@@ -12,11 +12,15 @@ pid_t	do_execute(t_ast *ast, t_filed *fd, int i)
 	}
 	if (cpid == 0) {
 		close(fd->in);
-        if (strchr(ast->args[i]->data[0], '/')) // replace /w ft_strchr!!!
+        if (ft_strchr(ast->args[i]->data[0], '/'))
 		    execve(ast->args[i]->data[0], ast->args[i]->data, NULL);
         else
         {
             pathname = search_path(ast->args[i]->data[0]);
+            if (!pathname) {
+                perror("command not found");
+                exit(EXIT_FAILURE);
+            }
             execve(pathname, ast->args[i]->data, NULL);
             free(pathname);
         }
