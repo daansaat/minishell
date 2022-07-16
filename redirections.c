@@ -1,40 +1,4 @@
 #include "exec.h"
-#include <stdlib.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include <stdio.h>
-#include <string.h>
-
-t_filed    *init_fd(void)
-{
-	t_filed	*fd;
-	
-	fd = malloc(sizeof(t_filed));
-	if (!fd) {
-		perror("malloc(1)");
-		exit(EXIT_FAILURE);
-	}
-	fd->tmpin = dup(STDIN_FILENO);
-	fd->tmpout = dup(STDOUT_FILENO);
-	fd->in = dup(STDIN_FILENO);
-	fd->out = dup(STDOUT_FILENO);
-	return (fd);
-}
-
-void    close_fd(t_filed *fd)
-{
-	if (dup2(fd->tmpin, STDIN_FILENO) == -1) {
-		perror("dup2(3)");
-		exit(EXIT_FAILURE);
-	}
-	if (dup2(fd->tmpout, STDOUT_FILENO) == -1) {
-		perror("dup2(4)");
-		exit(EXIT_FAILURE);
-	}
-	close(fd->tmpin);
-	close(fd->tmpout);
-	free(fd);
-}
 
 void    read_till_delimiter(t_filed *fd, char *delimiter)
 {
@@ -44,7 +8,6 @@ void    read_till_delimiter(t_filed *fd, char *delimiter)
 
 	i = 0;
 	fd->in = open("tmp.txt", O_RDWR | O_CREAT | O_TRUNC, 0777);
-	// create_pipe(fd);
 	while (read(STDIN_FILENO, buff, 1)) // replace 0 with fd->in for if input < ??
 	{
 		line[i] = buff[0];

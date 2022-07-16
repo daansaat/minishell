@@ -8,7 +8,7 @@ int	main(void)
 
     ast = malloc(sizeof(t_ast));
 
-    ast->cmd_number = 2;
+    ast->cmd_number = 1;
 
     ast->args = malloc(sizeof(t_args*) * 50);
 
@@ -28,13 +28,13 @@ int	main(void)
     ast->args[0]->data[1] = "1234";
     ast->args[0]->data[2] = NULL;
 
-    ast->args[1]->type = TOKEN_STRING;
-    ast->args[1]->data[0] = "cat";
+    ast->args[1]->type = TOKEN_LESS;
+    ast->args[1]->data[0] = "1";
     ast->args[1]->data[1] = NULL;//"-l";
     ast->args[1]->data[2] = NULL;
 
-    ast->args[2]->type = TOKEN_LESS;
-    ast->args[2]->data[0] = "1";
+    ast->args[2]->type = TOKEN_DOUBLELESS;
+    ast->args[2]->data[0] = "666";
     ast->args[2]->data[1] = NULL;//"-l";
     ast->args[2]->data[2] = NULL;
 
@@ -43,7 +43,7 @@ int	main(void)
     // ast->args[3]->data[1] = NULL;
     // ast->args[3]->data[2] = NULL;
 
-    ast->args[3] = NULL;
+    ast->args[1] = NULL;
 	executor(ast);
     // system("leaks exec");
 	return (0);

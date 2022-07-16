@@ -2,25 +2,33 @@ NAME = exec
 SRC = \
 	main.c \
 	exec.c \
-	fd_utils.c
+	file_descriptors.c \
+	redirections.c \
+	cmd_search.c
 OBJ_DIR = obj/
 OBJ = $(SRC:%.c=$(OBJ_DIR)%.o)
 FLAGS = -Wall -Werror -Wextra
-INC = -I ./
+INC = -I ./ -I ./libft
+LIB = -L ./libft -l ft
 
 all: $(NAME)
 
-$(NAME): $(OBJ)
+$(NAME): $(OBJ) libft/libft.a
 	$(CC) $(FLAGS) $^ -o $@
 
 $(OBJ_DIR)%.o: %.c
 	@mkdir -p $(OBJ_DIR)
 	$(CC) $(FLAGS) $(INC) -c $< -o $@
 
+libft/libft.a:
+	$(MAKE) -C ./libft
+
 clean:
 	rm -rdf $(OBJ_DIR)
+	$(MAKE) -C ./libft clean
 
 fclean: clean
 	rm -f $(NAME)
+	rm -f libft/libft.a
 
 re: fclean all

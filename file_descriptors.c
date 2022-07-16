@@ -1,28 +1,18 @@
 #include "exec.h"
-// #include "../../inc/tokenizer.h"
-// #include "../../inc/parser.h"
-#include <stdlib.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include <stdio.h>
-#include <string.h>
 
-pid_t	do_execute(t_ast *ast, t_filed *fd, int i)
+void    close_fd(t_filed *fd)
 {
-	pid_t	cpid;
-
-	cpid = fork();
-	if (cpid == -1) {
-		perror("fork()");
+	if (dup2(fd->tmpin, STDIN_FILENO) == -1) {
+		perror("dup2(3)");
 		exit(EXIT_FAILURE);
 	}
-	if (cpid == 0) {
-		close(fd->in);
-		execvp(ast->args[i]->data[0], ast->args[i]->data);
-		perror("execvp()");
+	if (dup2(fd->tmpout, STDOUT_FILENO) == -1) {
+		perror("dup2(4)");
 		exit(EXIT_FAILURE);
 	}
-	return (cpid);
+	close(fd->tmpin);
+	close(fd->tmpout);
+	free(fd);
 }
 
 void	create_pipe(t_filed *fd)
@@ -57,26 +47,18 @@ void	set_fd(t_ast *ast, t_filed *fd, int i, int num_cmd, int total_num_cmd)
 	close(fd->out);
 }
 
-void	executor(t_ast *ast)
+t_filed    *init_fd(void)
 {
 	t_filed	*fd;
-	pid_t	cpid;
-	int		i = 0;
-	int		num_cmd = 0;
-
-	fd = init_fd();
-	while (ast->args[i])
-	{
-		if (ast->args[i] && ast->args[i]->type == TOKEN_STRING) {
-			set_fd(ast, fd, i, num_cmd, ast->cmd_number); 
-			cpid = do_execute(ast, fd, i);
-			num_cmd++;
-		}
-		i++;
-	}
-	if (waitpid(cpid, NULL, 0) == -1) {
-		perror("waitpid()");
+	
+	fd = malloc(sizeof(t_filed));
+	if (!fd) {
+		perror("malloc(1)");
 		exit(EXIT_FAILURE);
 	}
-	close_fd(fd);
+	fd->tmpin = dup(STDIN_FILENO);
+	fd->tmpout = dup(STDOUT_FILENO);
+	fd->in = dup(STDIN_FILENO);
+	fd->out = dup(STDOUT_FILENO);
+	return (fd);
 }
