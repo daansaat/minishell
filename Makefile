@@ -4,7 +4,8 @@ SRC = \
 	exec.c \
 	file_descriptors.c \
 	redirections.c \
-	cmd_search.c
+	cmd_search.c \
+	builtins.c
 OBJ_DIR = obj/
 OBJ = $(SRC:%.c=$(OBJ_DIR)%.o)
 FLAGS = -Wall -Werror -Wextra

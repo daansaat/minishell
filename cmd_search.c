@@ -34,13 +34,14 @@ char    *search_path(char *cmd)
         while (path_env[i] && path_env[i] != ':')
             i++;
         path = get_next_path(path_env, cmd, i, j);
-        if (stat(path, &sb) == 0) // still check if executable or not??
+        if (stat(path, &sb) == 0 && sb.st_mode & S_IXUSR) // still check if executable or not??
             return (path);
         else
             free(path);
         if (path_env[i] == ':')
             i++;
     }
-    errno = 127; // still error handling!
+    errno = ENOENT;//127; // still error handling!
     return (NULL);
 }
+

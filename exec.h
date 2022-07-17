@@ -1,6 +1,7 @@
 #ifndef EXEC_H
 # define EXEC_H
 #include "libft.h"
+#include "builtins.h"
 #include <stdlib.h>
 #include <unistd.h>
 #include <fcntl.h>
@@ -23,14 +24,6 @@ typedef enum e_tokentype
 	TOKEN_FILEPATH
 }	t_tokentype;
 
-typedef struct	s_filed
-{
-	int		tmpin;
-	int		tmpout;
-	int		in;
-	int		out;
-}				t_filed;
-
 typedef struct s_args
 {
 	char			**data;
@@ -42,6 +35,21 @@ typedef struct s_ast
 	t_args	**args;
 	int     cmd_number;
 }	t_ast;
+
+typedef struct	s_filed
+{
+	int		tmpin;
+	int		tmpout;
+	int		in;
+	int		out;
+}				t_filed;
+
+typedef struct	s_child
+{
+	pid_t	pid;
+	int		return_status;
+	int		state;
+}				t_child;
 
 void		executor(t_ast *ast);
 
