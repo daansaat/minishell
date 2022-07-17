@@ -1,15 +1,16 @@
 NAME = exec
+EXEC_DIR = exec_src/
 SRC = \
 	main.c \
 	exec.c \
-	file_descriptors.c \
+	filed.c \
 	redirections.c \
 	cmd_search.c \
 	builtins.c
 OBJ_DIR = obj/
 OBJ = $(SRC:%.c=$(OBJ_DIR)%.o)
 FLAGS = -Wall -Werror -Wextra
-INC = -I ./ -I ./libft
+INC = -I ./inc -I ./libft
 LIB = -L ./libft -l ft
 
 all: $(NAME)
@@ -17,7 +18,7 @@ all: $(NAME)
 $(NAME): $(OBJ) libft/libft.a
 	$(CC) $(FLAGS) $^ -o $@
 
-$(OBJ_DIR)%.o: %.c
+$(OBJ_DIR)%.o: $(EXEC_DIR)%.c
 	@mkdir -p $(OBJ_DIR)
 	$(CC) $(FLAGS) $(INC) -c $< -o $@
 

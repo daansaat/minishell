@@ -1,4 +1,6 @@
-#include "exec.h"
+#include "filed.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 void    close_fd(t_filed *fd)
 {
@@ -12,7 +14,6 @@ void    close_fd(t_filed *fd)
 	}
 	close(fd->tmpin);
 	close(fd->tmpout);
-	free(fd);
 }
 
 void	create_pipe(t_filed *fd)
@@ -47,18 +48,10 @@ void	set_fd(t_ast *ast, t_filed *fd, int i, int num_cmd, int total_num_cmd)
 	close(fd->out);
 }
 
-t_filed    *init_fd(void)
+void    init_fd(t_filed *fd)
 {
-	t_filed	*fd;
-	
-	fd = malloc(sizeof(t_filed));
-	if (!fd) {
-		perror("malloc(1)");
-		exit(EXIT_FAILURE);
-	}
 	fd->tmpin = dup(STDIN_FILENO);
 	fd->tmpout = dup(STDOUT_FILENO);
 	fd->in = dup(STDIN_FILENO);
 	fd->out = dup(STDOUT_FILENO);
-	return (fd);
 }

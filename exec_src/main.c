@@ -28,8 +28,8 @@ int	main(void)
     ast->args[0]->data[1] = "1234";
     ast->args[0]->data[2] = NULL;
 
-    ast->args[1]->type = TOKEN_LESS;
-    ast->args[1]->data[0] = "1";
+    ast->args[1]->type = TOKEN_GREATER;
+    ast->args[1]->data[0] = "wc";
     ast->args[1]->data[1] = NULL;//"-l";
     ast->args[1]->data[2] = NULL;
 
@@ -43,7 +43,7 @@ int	main(void)
     // ast->args[3]->data[1] = NULL;
     // ast->args[3]->data[2] = NULL;
 
-    ast->args[1] = NULL;
+    ast->args[2] = NULL;
 	executor(ast);
     // system("leaks exec");
 	return (0);

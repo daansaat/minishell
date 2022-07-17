@@ -1,4 +1,8 @@
-#include "exec.h"
+#include "filed.h"
+#include "libft.h"
+#include <fcntl.h>
+#include <unistd.h>
+#include <stdio.h>
 
 void    read_till_delimiter(t_filed *fd, char *delimiter)
 {
@@ -13,7 +17,7 @@ void    read_till_delimiter(t_filed *fd, char *delimiter)
 		line[i] = buff[0];
 		if (line[i] == '\n') {
 			line[i] = '\0';
-			if (strcmp(line, delimiter) == 0) //replace /w ft_strcmp!!
+			if (ft_strcmp(line, delimiter) == 0) //replace /w ft_strcmp!!
 				break ;
 			line[i] = '\n';
 			write(fd->in, line, i + 1);
