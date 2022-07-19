@@ -4,11 +4,11 @@
 void    init_builtins(t_builtins *builtins)
 {
 	builtins[0].name = "echo";
-	builtins[0].funct = echo;
+	builtins[0].funct = ft_echo;
 	builtins[1].name = NULL;
 }
 
-int    echo(char **argv)
+int    ft_echo(char **argv)
 {
 	int i;
 
@@ -19,5 +19,5 @@ int    echo(char **argv)
 		i++;
 	}
 	printf("\n");
-	return (0);
+	return (0);//(errno);
 }

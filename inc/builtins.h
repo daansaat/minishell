@@ -9,6 +9,12 @@ typedef struct  s_builtins
 }				t_builtins;
 
 void   init_builtins(t_builtins *builtins);
-int    echo(char **argv);
+int    ft_echo(char **argv);
+int    ft_cd(char **argv);
+int    ft_pwd(char **argv);
+int    ft_export(char **argv);
+int    ft_unset(char **argv);
+int    ft_env(char **argv);
+int    ft_exit(char **argv);
 
 # endif

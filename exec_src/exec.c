@@ -15,8 +15,8 @@ pid_t	do_execute(t_ast *ast, int i)
 		pathname = search_path(ast->args[i]->data[0]);
 	if (!pathname)
 	{
-		perror("command not found");
-		exit(127);//EXIT_FAILURE);
+		perror("command not found");//perror(ast->args[i]->data[0]);
+		// exit(127);//EXIT_FAILURE);
 	}
 	execve(pathname, ast->args[i]->data, NULL);
 	perror("execve()");
@@ -34,7 +34,7 @@ void    do_simple_command(t_ast *ast, t_child *child, int i)
 	{
 		if (ft_strcmp(ast->args[i]->data[0], builtins[j].name) == 0)
 		{
-			builtins[j].funct(ast->args[i]->data);
+			child->return_status = builtins[j].funct(ast->args[i]->data);
 			return ;//(errno);
 		}
 		j++;

@@ -44,7 +44,7 @@ char    *search_path(char *cmd)
 		if (path_env[i] == ':')
 			i++;
 	}
-	errno = ENOENT;//127; // still error handling!
+	// errno = ENOENT;//127; // still error handling!
 	return (NULL);
 }
 

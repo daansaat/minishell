@@ -24,7 +24,7 @@ int	main(void)
     ast->args[3]->data = malloc(sizeof(char*) * 50);
 
     ast->args[0]->type = TOKEN_STRING;
-    ast->args[0]->data[0] = "echo";
+    ast->args[0]->data[0] = "echos";
     ast->args[0]->data[1] = "1234";
     ast->args[0]->data[2] = NULL;
 
